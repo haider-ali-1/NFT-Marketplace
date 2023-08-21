@@ -6,7 +6,7 @@ import { generateUserToken } from '../utils/jwt.js';
 import sendEmail from '../services/emailService.js';
 
 // @ desc register user
-// @ route POST /api/v1/users/register
+// @ route POST /api/v1/auth/register
 // @ access PUBLIC
 
 const registerUser = asyncErrorHandler(async (req, res, next) => {
@@ -25,7 +25,7 @@ const registerUser = asyncErrorHandler(async (req, res, next) => {
 });
 
 // @ desc login user
-// @ route GET /api/v1/users/login
+// @ route GET /api/v1/auth/login
 // @ access PUBLIC
 
 const loginUser = asyncErrorHandler(async (req, res, next) => {
@@ -50,7 +50,7 @@ const loginUser = asyncErrorHandler(async (req, res, next) => {
 });
 
 // @ desc forgot password
-// @ route PATCH /api/v1/users/profile/forgot-password
+// @ route PATCH /api/v1/auth/forgot-password
 // @ access PRIVATE
 
 const forgotPassword = asyncErrorHandler(async (req, res, next) => {
@@ -66,7 +66,7 @@ const forgotPassword = asyncErrorHandler(async (req, res, next) => {
   // generate url for reset password
   const passwordResetURL = `${req.protocol}://${req.get(
     'host'
-  )}/api/v1/users/reset-password/${token}`;
+  )}/api/v1/auth/reset-password/${token}`;
 
   try {
     sendEmail({
@@ -86,7 +86,7 @@ const forgotPassword = asyncErrorHandler(async (req, res, next) => {
 });
 
 // @ desc forgot password
-// @ route PATCH /api/v1/users/profile/forgot-password
+// @ route PATCH /api/v1/auth/reset-password/:token
 // @ access PRIVATE
 
 const resetPassword = asyncErrorHandler(async (req, res, next) => {

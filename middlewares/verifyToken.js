@@ -11,10 +11,8 @@ const verifyToken = asyncErrorHandler(async (req, res, next) => {
 
   if (!token) throw new CustomError(`please login`, 400);
 
-  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, data) => {
-    if (err) throw new CustomError('invalid or expire token');
-    console.log(data);
-  });
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  req.user = decodedToken.user;
   next();
 });
 

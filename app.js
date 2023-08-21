@@ -16,7 +16,7 @@ app.use(express.static('./public'));
 
 // routes
 app.use('/api/v1/auth', authRoutes);
-// app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/users', userRoutes);
 // app.use('/api/v1/nfts', nftRoutes);
 
 app.all('*', (req, res, next) => {
