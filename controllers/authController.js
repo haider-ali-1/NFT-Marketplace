@@ -1,11 +1,11 @@
 import crypto from 'node:crypto';
 import asyncErrorHandler from '../middlewares/asyncErrorHandler.js';
-
+import User from '../models/userModel.js';
 import CustomError from '../utils/CustomError.js';
 import { generateUserToken } from '../utils/jwt.js';
 import sendEmail from '../services/emailService.js';
 
-// @ desc register user in database
+// @ desc register user
 // @ route POST /api/v1/users/register
 // @ access PUBLIC
 
