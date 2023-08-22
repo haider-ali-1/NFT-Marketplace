@@ -1,14 +1,14 @@
-import asyncErrorHandler from "../middlewares/asyncErrorHandler.js";
-import NFT from "../models/nftModel.js";
-import CustomError from "../utils/CustomError.js";
-import QueryBuilder from "../utils/QueryBuilder.js";
+import asyncErrorHandler from '../middlewares/asyncErrorHandler.js';
+import NFT from '../models/nftModel.js';
+import CustomError from '../utils/CustomError.js';
+import QueryBuilder from '../utils/QueryBuilder.js';
 
 // @ desc top 5 nfts
 // @ route GET /api/v1/top-5-nfts
 // @ access PUBLIC
 
 const topFiveNfts = asyncErrorHandler(async (req, res, next) => {
-  req.query.sort = "-totalRatings price";
+  req.query.sort = '-totalRatings price';
   req.query.limit = 5;
   next();
 });
@@ -26,7 +26,7 @@ const getAllNfts = asyncErrorHandler(async (req, res, next) => {
   const nfts = await features.query;
   res
     .status(200)
-    .json({ status: "success", total: nfts.length, data: { nfts } });
+    .json({ status: 'success', total: nfts.length, data: { nfts } });
 });
 
 // @ desc create new nft
@@ -35,7 +35,7 @@ const getAllNfts = asyncErrorHandler(async (req, res, next) => {
 
 const createNft = asyncErrorHandler(async (req, res, next) => {
   const nft = await NFT.create(req.body);
-  res.status(201).json({ status: "success", data: { nft } });
+  res.status(201).json({ status: 'success', data: { nft } });
 });
 
 // @ desc get single nft
@@ -47,7 +47,7 @@ const getNft = asyncErrorHandler(async (req, res, next) => {
 
   if (!nft) throw new CustomError("can't find nft with that id", 404);
 
-  res.status(201).json({ status: "success", data: { nft } });
+  res.status(201).json({ status: 'success', data: { nft } });
 });
 
 // @ desc update nft
@@ -59,7 +59,7 @@ const updateNft = asyncErrorHandler(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
-  res.status(201).json({ status: "success", data: { nft: updatedNft } });
+  res.status(201).json({ status: 'success', data: { nft: updatedNft } });
 });
 
 // @ desc delete nft
@@ -68,7 +68,7 @@ const updateNft = asyncErrorHandler(async (req, res, next) => {
 
 const deleteNft = asyncErrorHandler(async (req, res, next) => {
   await NFT.findByIdAndDelete(req.params.id);
-  res.status(200).json({ status: "success", data: "null" });
+  res.status(200).json({ status: 'success', data: 'null' });
 });
 
 // @ desc get nfts stats
@@ -80,17 +80,17 @@ const getNftsStats = asyncErrorHandler(async (req, res, next) => {
     { $match: { totalRatings: { $gte: 1 } } },
     {
       $group: {
-        _id: "$difficulty",
+        _id: '$difficulty',
         nftCount: { $sum: 1 },
-        nftName: { $push: "$name" },
-        minPrice: { $min: "$price" },
-        maxPrice: { $max: "$price" },
-        totalRatings: { $sum: "$totalRatings" },
-        avgPrice: { $avg: "$price" },
-        avgRating: { $avg: "$averageRating" },
+        nftName: { $push: '$name' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' },
+        totalRatings: { $sum: '$totalRatings' },
+        avgPrice: { $avg: '$price' },
+        avgRating: { $avg: '$averageRating' },
       },
     },
-    { $addFields: { difficulty: "$_id" } },
+    { $addFields: { difficulty: '$_id' } },
     {
       $project: {
         _id: 0,
@@ -100,13 +100,13 @@ const getNftsStats = asyncErrorHandler(async (req, res, next) => {
         minPrice: 1,
         maxPrice: 1,
         totalRatings: 1,
-        avgPrice: { $round: ["$avgPrice", 0] },
-        avgRating: { $round: ["$avgRating", 2] },
+        avgPrice: { $round: ['$avgPrice', 0] },
+        avgRating: { $round: ['$avgRating', 2] },
       },
     },
     { $sort: { totalRatings: -1 } },
   ]);
-  res.status(200).json({ status: "success", data: { stats } });
+  res.status(200).json({ status: 'success', data: { stats } });
 });
 
 // @ desc get nfts created in month
@@ -116,19 +116,19 @@ const getNftsStats = asyncErrorHandler(async (req, res, next) => {
 const getNftsCreatedInYear = asyncErrorHandler(async (req, res, next) => {
   const year = Number(req.params.year);
   const filteredNfts = await NFT.aggregate([
-    { $unwind: "$startDates" },
-    { $match: { $expr: { $eq: [{ $year: "$startDates" }, year] } } },
+    { $unwind: '$startDates' },
+    { $match: { $expr: { $eq: [{ $year: '$startDates' }, year] } } },
     {
       $group: {
-        _id: { $month: "$startDates" },
+        _id: { $month: '$startDates' },
         nftsCount: { $sum: 1 },
-        nftsName: { $push: "$name" },
+        nftsName: { $push: '$name' },
       },
     },
-    { $addFields: { month: "$_id" } },
+    { $addFields: { month: '$_id' } },
     { $project: { _id: 0 } },
   ]);
-  res.status(200).json({ status: "success", data: { filteredNfts } });
+  res.status(200).json({ status: 'success', data: { filteredNfts } });
 });
 
 export {

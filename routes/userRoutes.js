@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 router.use(verifyToken);
-router.route('/').get(getUser).patch(updateUser);
-router.route('/update-password').patch(updateUserPassword);
+router.route('/profile').get(getUser).patch(updateUser);
+router.route('/change-password').patch(updateUserPassword);
 
 export default router;

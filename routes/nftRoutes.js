@@ -1,5 +1,6 @@
 import express from 'express';
 import verifyToken from '../middlewares/verifyToken.js';
+import { roleAuth } from '../middlewares/roleAuth.js';
 import {
   getAllNfts,
   createNft,
@@ -20,7 +21,11 @@ router.route('/top-5-nfts').get(topFiveNfts, getAllNfts);
 router.route('/nfts-stats').get(getNftsStats);
 router.route('/created/:year').get(getNftsCreatedInYear);
 
-router.route('/').get(verifyToken, getAllNfts).post(createNft);
-router.route('/:id').get(getNft).patch(updateNft).delete(deleteNft);
+router.route('/').get(getAllNfts).post(createNft);
+router
+  .route('/:id')
+  .get(getNft)
+  .patch(updateNft)
+  .delete(verifyToken, roleAuth(['admin']), deleteNft);
 
 export default router;

@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import slugify from "slugify";
+import mongoose from 'mongoose';
+import slugify from 'slugify';
 
 const nftSchema = new mongoose.Schema(
   {
@@ -7,12 +7,12 @@ const nftSchema = new mongoose.Schema(
       type: String,
       trim: true,
       unique: true,
-      required: [true, "please provide nft name"],
-      maxLength: [40, "name should be less than 40 characters"],
+      required: [true, 'please provide nft name'],
+      maxLength: [40, 'name should be less than 40 characters'],
     },
     price: {
       type: Number,
-      required: [true, "please provide nft price"],
+      required: [true, 'please provide nft price'],
     },
     priceDiscount: {
       type: Number,
@@ -28,7 +28,7 @@ const nftSchema = new mongoose.Schema(
     },
     categories: {
       type: [String],
-      required: [true, "please provide movie category"],
+      required: [true, 'please provide movie category'],
     },
     summary: {
       type: String,
@@ -40,8 +40,7 @@ const nftSchema = new mongoose.Schema(
     },
     durationMinutes: {
       type: Number,
-      unique: true,
-      required: [true, "please provide duration in minutes"],
+      required: [true, 'please provide duration in minutes'],
     },
     maxGroupSize: {
       type: Number,
@@ -49,10 +48,10 @@ const nftSchema = new mongoose.Schema(
     difficulty: {
       type: String,
       enum: {
-        values: ["easy", "medium", "difficult"],
+        values: ['easy', 'medium', 'difficult'],
         message: `difficulty level should be either easy, medium or difficult`,
       },
-      default: "easy",
+      default: 'easy',
     },
     averageRating: {
       type: Number,
@@ -89,14 +88,14 @@ const nftSchema = new mongoose.Schema(
 );
 
 // Virtuals
-nftSchema.virtual("durationFormat").get(function () {
+nftSchema.virtual('durationFormat').get(function () {
   const hours = Math.floor(this.durationMinutes / 60);
   const minutes = this.durationMinutes % 60;
   return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 });
 
 // Document Middlewares
-nftSchema.pre("save", function (next) {
+nftSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
@@ -117,10 +116,10 @@ nftSchema.post(/^find/, function (result) {
 });
 
 // Aggregation Middlware
-nftSchema.pre("aggregate", function (next) {
+nftSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { secretNft: { $ne: true } } });
   next();
 });
 
-const NFT = mongoose.model("NFT", nftSchema);
+const NFT = mongoose.model('NFT', nftSchema);
 export default NFT;

@@ -10,13 +10,8 @@ import sendEmail from '../services/emailService.js';
 // @ access PUBLIC
 
 const registerUser = asyncErrorHandler(async (req, res, next) => {
-  const { name, email, password, profileImage } = req.body;
-  const user = await User.create({
-    name,
-    email,
-    password,
-    profileImage,
-  });
+  const { roles, ...userData } = req.body;
+  const user = await User.create(userData);
   // payload for generate token
   const payload = { user: { id: user._id, roles: user.roles } };
   const token = generateUserToken(payload);
