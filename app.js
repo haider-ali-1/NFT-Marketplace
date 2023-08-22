@@ -2,6 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
 import nftRoutes from './routes/nftRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
@@ -26,6 +27,9 @@ app.use(helmet());
 
 // body parsing middleware
 app.use(express.json({ limit: '10kb' }));
+
+// preven no sql injection
+app.use(mongoSanitize());
 
 // development logging middleware
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));

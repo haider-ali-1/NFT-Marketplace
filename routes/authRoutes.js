@@ -1,4 +1,5 @@
 import express from 'express';
+import { body } from 'express-validator';
 import {
   registerUser,
   loginUser,
@@ -8,7 +9,7 @@ import {
 
 const router = express.Router();
 
-router.route('/register').post(registerUser);
+router.route('/register').post([body('name').trim().escape()], registerUser);
 router.route('/login').get(loginUser);
 router.route('/forgot-password').post(forgotPassword);
 router.route('/reset-password/:token').patch(resetPassword);
