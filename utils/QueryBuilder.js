@@ -35,9 +35,11 @@ class QueryBuilder {
         }
       }
 
-      if (schemaTypeNumber) {
+      if (schemaTypeNumber || schemaTypeString) {
         const { gte, gt, lte, lt } = queryObject[key];
         if (gte || gt || lte || lt) continue;
+        const selections = queryObject[key].split(',');
+        queryObject[key] = { in: selections };
       }
 
       // if (
@@ -73,8 +75,6 @@ class QueryBuilder {
       // if (gte || lte) continue;
       // queryObject[key] = { in: queryObject[key].split(',') };
     }
-
-    console.log('after', queryObject);
 
     const filteredObj = JSON.parse(
       JSON.stringify(queryObject).replace(
