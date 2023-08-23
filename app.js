@@ -20,7 +20,7 @@ const apiRateLimiter = rateLimit({
 });
 
 // set rate limiter before any other middleware
-app.use('/api', apiRateLimiter);
+// app.use('/api', apiRateLimiter);
 
 // enhance the security of app by adding various HTTP headers
 app.use(helmet());

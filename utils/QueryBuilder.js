@@ -10,24 +10,71 @@ class QueryBuilder {
     const queryObject = { ...this.queryObject };
     const excludedFields = ['page', 'limit', 'sort', 'fields'];
     excludedFields.forEach((el) => delete queryObject[el]);
-    for (const field in queryObject) {
-      const schemaType = this.query.model.schema.path(field);
-      if (
-        schemaType instanceof mongoose.Schema.Types.Array &&
-        schemaType.caster instanceof mongoose.Schema.Types.String
-      ) {
-        const selections = queryObject[field].split(',');
-        if (selections.length === 1) queryObject[field] = queryObject[field][0];
-        else queryObject[field] = { in: selections };
-      } else if (
-        schemaType instanceof mongoose.Schema.Types.Array &&
-        schemaType.caster instanceof mongoose.Schema.Types.Date
-      ) {
-        const [startDate, endDate] = queryObject[field].split(',');
-        queryObject[field] = { gte: startDate, lte: endDate };
-        console.log(queryObject);
+
+    for (const key in queryObject) {
+      const fieldSchemaType = this.query.model.schema.path(key);
+      const mongooseSchemaTypes = mongoose.Schema.Types;
+
+      const schemaTypeArray =
+        fieldSchemaType instanceof mongooseSchemaTypes.Array;
+      const schemaTypeString =
+        fieldSchemaType instanceof mongooseSchemaTypes.String;
+      const schemaTypeNumber =
+        fieldSchemaType instanceof mongooseSchemaTypes.Number;
+
+      const schemaTypeArrayOfDates =
+        schemaTypeArray &&
+        fieldSchemaType.caster instanceof mongooseSchemaTypes.Date;
+
+      const schemaTypeArrayOfStrings =
+        schemaTypeArray &&
+        fieldSchemaType.caster instanceof mongooseSchemaTypes.String;
+
+      if (schemaTypeArray) {
+        if (fieldSchemaType instanceof mongooseSchemaTypes.Date) {
+        }
       }
+
+      if (schemaTypeNumber) {
+        const { gte, gt, lte, lt } = queryObject[key];
+        if (gte || gt || lte || lt) continue;
+      }
+
+      // if (
+      //   schemaType instanceof mongoose.Schema.Types.Array &&
+      //   schemaType.caster instanceof mongoose.Schema.Types.String
+      // ) {
+      //   const selections = queryObject[field].split(',');
+      //   if (selections.length === 1)
+      //     queryObject[field] = queryObject[field][0];
+      //   else queryObject[field] = { in: selections };
+      // } else if (
+      //   schemaType instanceof mongoose.Schema.Types.Array &&
+      //   schemaType.caster instanceof mongoose.Schema.Types.Date
+      // ) {
+      //   const [startDate, endDate] = queryObject[field].split(',');
+      //   queryObject[field] = { gte: startDate, lte: endDate };
+      //   console.log(queryObject);
+      // }
     }
+
+    console.log(queryObject);
+
+    // const keyValue = 4,9
+    for (const key in queryObject) {
+      // const schemaType = this.query.model.schema.path(key);
+      // const mongooseSchemaTypes = mongoose.Schema.Types;
+      // const schemaTypeArray = schemaType instanceof mongooseSchemaTypes.Array;
+      // if (schemaTypeArray) {
+      //   if (schemaType.caster instanceof mongooseSchemaTypes.Date) {
+      //   }
+      // }
+      // const { gte, lte } = queryObject[key];
+      // if (gte || lte) continue;
+      // queryObject[key] = { in: queryObject[key].split(',') };
+    }
+
+    console.log('after', queryObject);
 
     const filteredObj = JSON.parse(
       JSON.stringify(queryObject).replace(

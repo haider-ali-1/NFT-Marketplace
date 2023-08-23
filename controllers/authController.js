@@ -4,12 +4,19 @@ import User from '../models/userModel.js';
 import CustomError from '../utils/CustomError.js';
 import { generateUserToken } from '../utils/jwt.js';
 import sendEmail from '../services/emailService.js';
+import { validationResult } from 'express-validator';
+import { error } from 'node:console';
 
 // @ desc register user
 // @ route POST /api/v1/auth/register
 // @ access PUBLIC
 
 const registerUser = asyncErrorHandler(async (req, res, next) => {
+  const result = validationResult(req);
+  if (!result.isEmpty()) {
+    res.send({ errors: result.array() });
+  }
+
   const { roles, ...userData } = req.body;
   const user = await User.create(userData);
   // payload for generate token
