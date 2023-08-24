@@ -14,6 +14,9 @@ const nftSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'please provide nft price'],
     },
+    releaseDate: {
+      type: Date,
+    },
     priceDiscount: {
       type: Number,
       validate: {
